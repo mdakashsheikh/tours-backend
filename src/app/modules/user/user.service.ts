@@ -1,9 +1,10 @@
 import httpStatus from 'http-status-codes';
 import AppError from "../../errorHelpers/AppError";
-import { IAuthProvider, IUser } from "./user.interface";
+import { IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from "bcryptjs";
 import { envVars } from '../../config/env';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createUser = async(payload: Partial<IUser>) => {
     const { email, password, ...rest } = payload;
@@ -26,6 +27,26 @@ const createUser = async(payload: Partial<IUser>) => {
     })
     
     return user
+}
+
+const updateUser = async(userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
+    const user = await User.findById(userId);
+    
+    if(!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User Not Found")
+    }
+
+    if(payload.role){
+        if(decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE){
+            throw new AppError(httpStatus.FORBIDDEN, "You don't have permission to change role")
+        }  
+    }
+
+    const { email, ...rest } = payload; 
+    
+    const updatedUser = await User.findByIdAndUpdate(userId, rest, { new: true });
+    
+    return updatedUser;
 }
 
 const getAllUsers = async() => {
