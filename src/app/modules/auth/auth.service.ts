@@ -3,8 +3,7 @@ import httpStatus from 'http-status-codes';
 import AppError from "../../errorHelpers/AppError";
 import { IUser } from "../user/user.interface"
 import { User } from "../user/user.model";
-import { generateToken } from '../../utils/jwt';
-import { envVars } from '../../config/env';
+import { createNewAccessTokenWithRefreshToken, createUserToken } from '../../utils/usersToken';
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
     const { email, password } = payload;
@@ -21,19 +20,29 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Icorrect Password")
     }
     
-    const jwtPayload = {
-        userId: isUserExist._id,
-        email: isUserExist.email,
-        role: isUserExist.role
-    }
+    const userToken = createUserToken(isUserExist)
     
-    const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: pass, ...rest } = isUserExist.toObject()
     
     return {
-        accessToken
+        accessToken: userToken.accessToken,
+        refreshToken: userToken.refreshToken,
+        user: rest
     }
 }
 
+const getNewAccessToken = async (refreshToken: string) => {
+    
+    const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
+    
+    return {
+        accessToken: newAccessToken.accessToken
+    }
+}
+
+
 export const AuthService = {
-    credentialsLogin
+    credentialsLogin,
+    getNewAccessToken
 }
