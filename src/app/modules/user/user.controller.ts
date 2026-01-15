@@ -31,7 +31,7 @@ const updateUser = catchAsync(async(req: Request, res: Response, next: NextFunct
     const verifiedToken = req.user;
     
     const payload = req.body;
-    const user = await UserService.updateUser(userId, payload, verifiedToken)
+    const user = await UserService.updateUser(userId, payload, verifiedToken as JwtPayload)
     
     sendResponse(res, {
         success: true,
