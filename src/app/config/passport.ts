@@ -4,6 +4,40 @@ import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-go
 import { envVars } from "./env";
 import { User } from "../modules/user/user.model";
 import { Role } from "../modules/user/user.interface";
+import { Strategy as LocalStrategy } from "passport-local";
+import bcryptjs from 'bcryptjs';
+
+
+passport.use(
+    new LocalStrategy({
+        usernameField: "email",
+        passwordField: "password"
+    }, async(email: string, password: string, done) => {
+        try {
+            const isUserExist = await User.findOne({ email })
+            
+            if(!isUserExist) {
+                return done(null, false, { message: "User does not exist" })
+            }
+            
+            const isGoogleAuthenticated = isUserExist.auths.some(providerObject => providerObject.provider === "google")
+            
+            if(isGoogleAuthenticated) {
+                return done(null, false, { message: "You have authenticated through Google. So if you want to login with creadentials, then at first login with with goole and set a password for your Gmail, and then you can login with email and password."})
+            }
+            const isPasswordMatched = await bcryptjs.compare(password as string, isUserExist.password as string)
+            
+            if(!isPasswordMatched) {
+                return done(null, false, { message: "Password does not match"})
+            }
+            
+            return done(null, isUserExist)
+        } catch (error) {
+            console.log(error)
+            done(error)
+        }
+    })
+)
 
 passport.use(
     new GoogleStrategy(
