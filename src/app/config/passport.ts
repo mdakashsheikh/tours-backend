@@ -20,9 +20,13 @@ passport.use(
                 return done(null, false, { message: "User does not exist" })
             }
             
+            // if(!isUserExist) {
+            //     return done("User does not exist")
+            // }
+            
             const isGoogleAuthenticated = isUserExist.auths.some(providerObject => providerObject.provider === "google")
             
-            if(isGoogleAuthenticated) {
+            if(isGoogleAuthenticated && !isUserExist.password) {
                 return done(null, false, { message: "You have authenticated through Google. So if you want to login with creadentials, then at first login with with goole and set a password for your Gmail, and then you can login with email and password."})
             }
             const isPasswordMatched = await bcryptjs.compare(password as string, isUserExist.password as string)
