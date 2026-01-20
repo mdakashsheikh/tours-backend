@@ -8,8 +8,15 @@ export const golobalErrorHandler = (err: any, req: Request, res: Response, next:
     
     let statusCode = 500
     let message = "Something went wrong!"
-    
-    if(err instanceof AppError) {
+    if(err.code === 11000) {
+        statusCode = 400
+        // message = "Duplicate Error Occured!"
+        const duplicate = err.message.match(/"([^"]*)"/)
+        message = `${duplicate[1]} already exists!!`
+    } else if(err.name == "CastError") {
+        statusCode = 400
+        message = "Invalid MongoDB ObjectID"
+    } else if(err instanceof AppError) {
         statusCode = err.statusCode
         message = err.message
     } else if(err instanceof Error) {
