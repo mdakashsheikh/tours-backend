@@ -6,28 +6,55 @@ import AppError from "../errorHelpers/AppError"
 
 export const golobalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     
+    const errorSources: any = [
+        // {
+        //     path: "isDeleted",
+        //     message: "Cast Failed"
+        // }
+    ]
+    
     let statusCode = 500
     let message = "Something went wrong!"
     if(err.code === 11000) {
+        
         statusCode = 400
         // message = "Duplicate Error Occured!"
         const duplicate = err.message.match(/"([^"]*)"/)
         message = `${duplicate[1]} already exists!!`
+        
     } else if(err.name == "CastError") {
+        
         statusCode = 400
         message = "Invalid MongoDB ObjectID"
+        
+    } else if(err.name === "validationError") {
+        
+        statusCode = 400
+        const errors = Object.values(err.errors)
+        
+        errors.forEach((errorObject: any) => errorSources.push({
+            path: errorObject.path,
+            message: errorObject.message
+        }))
+        message = err.message
+        
     } else if(err instanceof AppError) {
+        
         statusCode = err.statusCode
         message = err.message
+        
     } else if(err instanceof Error) {
+        
         statusCode = 500
         message = err.message
+        
     }
     
     res.status(statusCode).json({
         success: false,
         message,
-        err,
+        errorSources,
+        // err,
         stack: envVars.NODE_ENV === "development" ? err.stack : null
     })
 }
