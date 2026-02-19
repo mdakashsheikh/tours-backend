@@ -1,5 +1,5 @@
 <h1 align="center">Hi 👋, I'm Akash Sheikh</h1>
-<h3 align="center">A passionate frontend developer from Bangladesh.</h3>
+<h3 align="center">A passionate full stack software developer from Bangladesh.</h3>
 
 - 🔭 I’m currently working on **Tour Mangament Systems**
 
