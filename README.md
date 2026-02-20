@@ -1,11 +1,11 @@
-<h1 align="center">Hi 👋, I'm Akash Sheikh</h1>
+<h1 align="center">Hi I'm Akash Sheikh</h1>
 <h3 align="center">A passionate full stack software developer from Bangladesh.</h3>
 
 - 🔭 I’m currently working on **Tour Mangament Systems**
 
 - 🌱 I’m currently learning **Rails**
 
-- 💬 Ask me about **react, node, javascript**
+- 💬 Ask me about **React, Node, Express, Next, Javascript, TypeScript, MogoDB, MYSQL**
 
 - 📫 How to reach me **nmakashsheikh@gmail.com**
 
