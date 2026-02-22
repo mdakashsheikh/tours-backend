@@ -3,7 +3,7 @@
 
 - 🔭 I’m currently working on **Tour Mangament Systems**
 
-- 🌱 I’m currently learning **Rails**
+- 🌱 I’m currently learning **Ruby on Rails**
 
 - 💬 Ask me about **React, Node, Express, Next, Javascript, TypeScript, MogoDB, MYSQL**
 
