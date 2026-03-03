@@ -5,7 +5,7 @@
 
 - 🌱 I’m currently learning **Ruby on Rails**
 
-- 💬 Ask me about **React, Node, Express, Next, Javascript, TypeScript, MogoDB, MYSQL**
+- 💬 Ask me about **ReactJS, NodeJS, ExpressJS, NextJS, Javascript, TypeScript, MogoDB, MYSQL**
 
 - 📫 How to reach me **nmakashsheikh@gmail.com**
 
